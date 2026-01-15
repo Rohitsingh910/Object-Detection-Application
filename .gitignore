@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+env/
+
+# Environment variables
+.env
+
+# Model / weights (VERY IMPORTANT)
+*.pt
+*.h5
+*.onnx
+*.weights
+
+# Dataset
+data/
+datasets/
+
+# Logs
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
