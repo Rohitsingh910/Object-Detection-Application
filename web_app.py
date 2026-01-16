@@ -3,36 +3,37 @@ import torch
 from PIL import Image
 import numpy as np
 
-# Page configuration
-st.set_page_config(page_title="Object Detection App", layout="centered")
+st.set_page_config(page_title="Live Object Detection", layout="centered")
 
-st.title("🚀 Object Detection Application")
-st.write("Upload an image to detect objects using YOLOv5.")
+st.title("🚀 Real-time Object Detection")
+st.write("Upload an image OR use your Camera for live detection.")
 
-# Model load karne ka function
 @st.cache_resource
 def load_model():
-    # Torch hub se seedha model load karein
-    model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True, force_reload=True)
+    model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
     return model
 
 model = load_model()
 
-# Image uploader
-uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
+# User ko do options dena: Camera ya File Upload
+option = st.radio("Select Input Method:", ("Camera", "Upload Image"))
 
-if uploaded_file is not None:
+source_img = None
+
+if option == "Camera":
+    source_img = st.camera_input("Take a picture")
+else:
+    source_img = st.file_uploader("Upload Image", type=["jpg","png","jpeg"])
+
+if source_img:
     # Image process karna
-    image = Image.open(uploaded_file)
+    image = Image.open(source_img)
     img_array = np.array(image)
 
-    # Inference (Detection)
+    # Detection
     results = model(img_array)
+    detected_img = results.render()[0]
 
-    # Results render karna (boxes draw karna)
-    # results.render() ek list deta hai, pehli image [0] lein
-    detected_img_array = results.render()[0] 
-    
-    # Result display karna
-    st.image(detected_img_array, caption="Detection Results", use_container_width=True)
-    st.success("Detection Successful!")
+    # Result dikhana
+    st.image(detected_img, caption="Detection Result", use_container_width=True)
+    st.success("Detected successfully!")
