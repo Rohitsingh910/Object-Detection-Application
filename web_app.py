@@ -13,7 +13,7 @@ st.write("Upload an image to detect objects using YOLOv5.")
 @st.cache_resource
 def load_model():
     # Torch hub se seedha model load karein
-    model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+    model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True, force_reload=True)
     return model
 
 model = load_model()
