@@ -9,32 +9,30 @@ st.set_page_config(page_title="Object Detection App", layout="centered")
 st.title("🚀 Object Detection Application")
 st.write("Upload an image to detect objects using YOLOv5.")
 
-# Model load karne ka function (Cached taaki baar baar download na ho)
+# Model load karne ka function
 @st.cache_resource
 def load_model():
-    # Hum seedha torch hub se model load kar rahe hain
+    # Torch hub se seedha model load karein
     model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
     return model
 
 model = load_model()
 
-# File uploader widget
+# Image uploader
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
 
 if uploaded_file is not None:
-    # Image ko open aur process karna
+    # Image process karna
     image = Image.open(uploaded_file)
     img_array = np.array(image)
 
     # Inference (Detection)
     results = model(img_array)
 
-    # Results ko render karna (Ye image par boxes bana deta hai)
-    # results.render() ek list return karta hai, isliye [0] use kar rahe hain
+    # Results render karna (boxes draw karna)
+    # results.render() ek list deta hai, pehli image [0] lein
     detected_img_array = results.render()[0] 
     
-    # Final image display karna
+    # Result display karna
     st.image(detected_img_array, caption="Detection Results", use_container_width=True)
-    
-    # Success message
-    st.success("Detection Complete!")
+    st.success("Detection Successful!")
